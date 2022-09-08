@@ -13,7 +13,7 @@
 #include <cassert>
 #include <stdexcept>
 
-namespace Piccolo
+namespace Pilot
 {
     void FXAAPass::initialize(const RenderPassInitInfo* init_info)
     {
@@ -283,4 +283,4 @@ namespace Piccolo
         }
     }
 
-} // namespace Piccolo
+} // namespace Pilot

@@ -2,7 +2,7 @@
 #include "runtime/core/math/matrix3.h"
 #include "runtime/core/math/vector3.h"
 
-namespace Piccolo
+namespace Pilot
 {
     const Quaternion Quaternion::ZERO(0, 0, 0, 0);
     const Quaternion Quaternion::IDENTITY(1, 0, 0, 0);
@@ -245,7 +245,7 @@ namespace Piccolo
         return v + uv + uuv;
     }
 
-    Radian Quaternion::getYaw(bool reproject_axis) const
+    Radian Quaternion::getRoll(bool reproject_axis) const
     {
         if (reproject_axis)
         {
@@ -290,7 +290,7 @@ namespace Piccolo
         }
     }
     //-----------------------------------------------------------------------
-    Radian Quaternion::getRoll(bool reproject_axis) const
+    Radian Quaternion::getYaw(bool reproject_axis) const
     {
         if (reproject_axis)
         {
@@ -369,4 +369,4 @@ namespace Piccolo
         result.normalise();
         return result;
     }
-} // namespace Piccolo
+} // namespace Pilot

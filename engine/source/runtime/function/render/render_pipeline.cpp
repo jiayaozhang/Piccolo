@@ -12,7 +12,7 @@
 
 #include "runtime/core/base/macro.h"
 
-namespace Piccolo
+namespace Pilot
 {
     void RenderPipeline::initialize(RenderPipelineInitInfo init_info)
     {
@@ -51,9 +51,7 @@ namespace Piccolo
         main_camera_pass->m_directional_light_shadow_color_image_view =
             std::static_pointer_cast<RenderPass>(m_directional_light_pass)->m_framebuffer.attachments[0].view;
 
-        MainCameraPassInitInfo main_camera_init_info;
-        main_camera_init_info.enble_fxaa = init_info.enable_fxaa;
-        m_main_camera_pass->initialize(&main_camera_init_info);
+        m_main_camera_pass->initialize(nullptr);
 
         std::vector<VkDescriptorSetLayout> descriptor_layouts = _main_camera_pass->getDescriptorSetLayouts();
         std::static_pointer_cast<PointLightShadowPass>(m_point_light_shadow_pass)
@@ -83,9 +81,9 @@ namespace Piccolo
         CombineUIPassInitInfo combine_ui_init_info;
         combine_ui_init_info.render_pass = _main_camera_pass->getRenderPass();
         combine_ui_init_info.scene_input_attachment =
-            _main_camera_pass->getFramebufferImageViews()[_main_camera_pass_backup_buffer_odd];
-        combine_ui_init_info.ui_input_attachment =
             _main_camera_pass->getFramebufferImageViews()[_main_camera_pass_backup_buffer_even];
+        combine_ui_init_info.ui_input_attachment =
+            _main_camera_pass->getFramebufferImageViews()[_main_camera_pass_backup_buffer_odd];
         m_combine_ui_pass->initialize(&combine_ui_init_info);
 
         PickPassInitInfo pick_init_info;
@@ -194,8 +192,8 @@ namespace Piccolo
         fxaa_pass.updateAfterFramebufferRecreate(
             main_camera_pass.getFramebufferImageViews()[_main_camera_pass_post_process_buffer_odd]);
         combine_ui_pass.updateAfterFramebufferRecreate(
-            main_camera_pass.getFramebufferImageViews()[_main_camera_pass_backup_buffer_odd],
-            main_camera_pass.getFramebufferImageViews()[_main_camera_pass_backup_buffer_even]);
+            main_camera_pass.getFramebufferImageViews()[_main_camera_pass_backup_buffer_even],
+            main_camera_pass.getFramebufferImageViews()[_main_camera_pass_backup_buffer_odd]);
         pick_pass.recreateFramebuffer();
     }
     uint32_t RenderPipeline::getGuidOfPickedMesh(const Vector2& picked_uv)
@@ -215,4 +213,4 @@ namespace Piccolo
         MainCameraPass& main_camera_pass = *(static_cast<MainCameraPass*>(m_main_camera_pass.get()));
         main_camera_pass.m_selected_axis = selected_axis;
     }
-} // namespace Piccolo
+} // namespace Pilot

@@ -6,7 +6,7 @@
 
 #include "runtime/function/framework/component/component.h"
 
-namespace Piccolo
+namespace Pilot
 {
     class RenderCamera;
 
@@ -44,4 +44,4 @@ namespace Piccolo
         Vector3 m_up {Vector3::UNIT_Z};
         Vector3 m_left {Vector3::UNIT_X};
     };
-} // namespace Piccolo
+} // namespace Pilot

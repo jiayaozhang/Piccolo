@@ -6,7 +6,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace Piccolo
+namespace Pilot
 {
     class Character;
     class GObject;
@@ -53,4 +53,4 @@ namespace Piccolo
 
         std::weak_ptr<PhysicsScene> m_physics_scene;
     };
-} // namespace Piccolo
+} // namespace Pilot

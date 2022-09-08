@@ -2,7 +2,7 @@
 
 #include "runtime/core/math/vector3.h"
 
-namespace Piccolo
+namespace Pilot
 {
     struct RayCollision
     {
@@ -37,4 +37,4 @@ namespace Piccolo
         Vector3 m_start_point;
         Vector3 m_direction;
     };
-} // namespace Piccolo
+} // namespace Pilot

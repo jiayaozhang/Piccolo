@@ -4,7 +4,7 @@
 
 #include "runtime/core/math/vector3.h"
 
-namespace Piccolo
+namespace Pilot
 {
     class PhysicsOBBShape : public PhysicsShapeBase
     {
@@ -19,4 +19,4 @@ namespace Piccolo
     private:
         Vector3 m_half_dimensions;
     };
-} // namespace Piccolo
+} // namespace Pilot

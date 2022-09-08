@@ -1,7 +1,7 @@
 #pragma once
 #include "runtime/core/meta/reflection/reflection.h"
 
-namespace Piccolo
+namespace Pilot
 {
     class GObject;
     // Component
@@ -29,4 +29,4 @@ namespace Piccolo
         bool m_tick_in_editor_mode {false};
     };
 
-} // namespace Piccolo
+} // namespace Pilot

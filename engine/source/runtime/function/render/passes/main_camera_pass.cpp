@@ -2,7 +2,6 @@
 #include "runtime/function/render/render_helper.h"
 #include "runtime/function/render/render_mesh.h"
 #include "runtime/function/render/render_resource.h"
-#include "runtime/function/render/glm_wrapper.h"
 
 #include "runtime/function/render/rhi/vulkan/vulkan_rhi.h"
 #include "runtime/function/render/rhi/vulkan/vulkan_util.h"
@@ -22,14 +21,11 @@
 #include <skybox_frag.h>
 #include <skybox_vert.h>
 
-namespace Piccolo
+namespace Pilot
 {
     void MainCameraPass::initialize(const RenderPassInitInfo* init_info)
     {
         RenderPass::initialize(nullptr);
-
-        const MainCameraPassInitInfo* _init_info = static_cast<const MainCameraPassInitInfo*>(init_info);
-        m_enable_fxaa                            = _init_info->enble_fxaa;
 
         setupAttachments();
         setupRenderPass();
@@ -327,16 +323,8 @@ namespace Piccolo
         color_grading_pass_input_attachment_reference.layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 
         VkAttachmentReference color_grading_pass_color_attachment_reference {};
-        if (m_enable_fxaa)
-        {
-            color_grading_pass_color_attachment_reference.attachment =
-                &post_process_odd_color_attachment_description - attachments;
-        }
-        else
-        {
-            color_grading_pass_color_attachment_reference.attachment =
-                &backup_odd_color_attachment_description - attachments;
-        }
+        color_grading_pass_color_attachment_reference.attachment =
+            &post_process_odd_color_attachment_description - attachments;
         color_grading_pass_color_attachment_reference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
         VkSubpassDescription& color_grading_pass   = subpasses[_main_camera_subpass_color_grading];
@@ -350,20 +338,11 @@ namespace Piccolo
         color_grading_pass.pPreserveAttachments    = NULL;
 
         VkAttachmentReference fxaa_pass_input_attachment_reference {};
-        if (m_enable_fxaa)
-        {
-            fxaa_pass_input_attachment_reference.attachment =
-                &post_process_odd_color_attachment_description - attachments;
-        }
-        else
-        {
-            fxaa_pass_input_attachment_reference.attachment =
-                &backup_even_color_attachment_description - attachments;
-        }
+        fxaa_pass_input_attachment_reference.attachment = &post_process_odd_color_attachment_description - attachments;
         fxaa_pass_input_attachment_reference.layout     = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 
         VkAttachmentReference fxaa_pass_color_attachment_reference {};
-        fxaa_pass_color_attachment_reference.attachment = &backup_odd_color_attachment_description - attachments;
+        fxaa_pass_color_attachment_reference.attachment = &backup_even_color_attachment_description - attachments;
         fxaa_pass_color_attachment_reference.layout     = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
         VkSubpassDescription& fxaa_pass   = subpasses[_main_camera_subpass_fxaa];
@@ -377,10 +356,10 @@ namespace Piccolo
         fxaa_pass.pPreserveAttachments    = NULL;
 
         VkAttachmentReference ui_pass_color_attachment_reference {};
-        ui_pass_color_attachment_reference.attachment = &backup_even_color_attachment_description - attachments;
+        ui_pass_color_attachment_reference.attachment = &backup_odd_color_attachment_description - attachments;
         ui_pass_color_attachment_reference.layout     = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-        uint32_t ui_pass_preserve_attachment = &backup_odd_color_attachment_description - attachments;
+        uint32_t ui_pass_preserve_attachment = &backup_even_color_attachment_description - attachments;
 
         VkSubpassDescription& ui_pass   = subpasses[_main_camera_subpass_ui];
         ui_pass.pipelineBindPoint       = VK_PIPELINE_BIND_POINT_GRAPHICS;
@@ -394,10 +373,10 @@ namespace Piccolo
 
         VkAttachmentReference combine_ui_pass_input_attachments_reference[2] = {};
         combine_ui_pass_input_attachments_reference[0].attachment =
-            &backup_odd_color_attachment_description - attachments;
+            &backup_even_color_attachment_description - attachments;
         combine_ui_pass_input_attachments_reference[0].layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
         combine_ui_pass_input_attachments_reference[1].attachment =
-            &backup_even_color_attachment_description - attachments;
+            &backup_odd_color_attachment_description - attachments;
         combine_ui_pass_input_attachments_reference[1].layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 
         VkAttachmentReference combine_ui_pass_color_attachment_reference {};
@@ -2283,7 +2262,7 @@ namespace Piccolo
 
         m_vulkan_rhi->m_vk_cmd_next_subpass(m_vulkan_rhi->m_current_command_buffer, VK_SUBPASS_CONTENTS_INLINE);
 
-        if (m_enable_fxaa) fxaa_pass.draw();
+        fxaa_pass.draw();
 
         m_vulkan_rhi->m_vk_cmd_next_subpass(m_vulkan_rhi->m_current_command_buffer, VK_SUBPASS_CONTENTS_INLINE);
 
@@ -2378,7 +2357,7 @@ namespace Piccolo
 
         m_vulkan_rhi->m_vk_cmd_next_subpass(m_vulkan_rhi->m_current_command_buffer, VK_SUBPASS_CONTENTS_INLINE);
 
-        if (m_enable_fxaa) fxaa_pass.draw();
+        fxaa_pass.draw();
 
         m_vulkan_rhi->m_vk_cmd_next_subpass(m_vulkan_rhi->m_current_command_buffer, VK_SUBPASS_CONTENTS_INLINE);
 
@@ -2417,9 +2396,9 @@ namespace Piccolo
     {
         struct MeshNode
         {
-            const Matrix4x4* model_matrix {nullptr};
-            const Matrix4x4* joint_matrices {nullptr};
-            uint32_t         joint_count {0};
+            glm::mat4 model_matrix;
+            glm::mat4 joint_matrices[m_mesh_vertex_blending_max_joint_count];
+            bool      enable_vertex_blending;
         };
 
         std::map<VulkanPBRMaterial*, std::map<VulkanMesh*, std::vector<MeshNode>>> main_camera_mesh_drawcall_batch;
@@ -2431,11 +2410,14 @@ namespace Piccolo
             auto& mesh_nodes     = mesh_instanced[node.ref_mesh];
 
             MeshNode temp;
-            temp.model_matrix = node.model_matrix;
+            temp.model_matrix           = node.model_matrix;
+            temp.enable_vertex_blending = node.enable_vertex_blending;
             if (node.enable_vertex_blending)
             {
-                temp.joint_matrices = node.joint_matrices;
-                temp.joint_count = node.joint_count;
+                for (uint32_t i = 0; i < m_mesh_vertex_blending_max_joint_count; ++i)
+                {
+                    temp.joint_matrices[i] = node.joint_matrices[i];
+                }
             }
 
             mesh_nodes.push_back(temp);
@@ -2559,9 +2541,9 @@ namespace Piccolo
                         for (uint32_t i = 0; i < current_instance_count; ++i)
                         {
                             perdrawcall_storage_buffer_object.mesh_instances[i].model_matrix =
-                                GLMUtil::fromMat4x4(*mesh_nodes[drawcall_max_instance_count * drawcall_index + i].model_matrix);
+                                mesh_nodes[drawcall_max_instance_count * drawcall_index + i].model_matrix;
                             perdrawcall_storage_buffer_object.mesh_instances[i].enable_vertex_blending =
-                                mesh_nodes[drawcall_max_instance_count * drawcall_index + i].joint_matrices ?
+                                mesh_nodes[drawcall_max_instance_count * drawcall_index + i].enable_vertex_blending ?
                                     1.0 :
                                     -1.0;
                         }
@@ -2571,7 +2553,7 @@ namespace Piccolo
                         bool     least_one_enable_vertex_blending = true;
                         for (uint32_t i = 0; i < current_instance_count; ++i)
                         {
-                            if (!mesh_nodes[drawcall_max_instance_count * drawcall_index + i].joint_matrices)
+                            if (!mesh_nodes[drawcall_max_instance_count * drawcall_index + i].enable_vertex_blending)
                             {
                                 least_one_enable_vertex_blending = false;
                                 break;
@@ -2602,14 +2584,14 @@ namespace Piccolo
                                         per_drawcall_vertex_blending_dynamic_offset));
                             for (uint32_t i = 0; i < current_instance_count; ++i)
                             {
-                                if (mesh_nodes[drawcall_max_instance_count * drawcall_index + i].joint_matrices)
+                                if (mesh_nodes[drawcall_max_instance_count * drawcall_index + i].enable_vertex_blending)
                                 {
-                                    for (uint32_t j = 0; j < mesh_nodes[drawcall_max_instance_count * drawcall_index + i].joint_count; ++j)
+                                    for (uint32_t j = 0; j < m_mesh_vertex_blending_max_joint_count; ++j)
                                     {
                                         per_drawcall_vertex_blending_storage_buffer_object
                                             .joint_matrices[m_mesh_vertex_blending_max_joint_count * i + j] =
-                                            GLMUtil::fromMat4x4(mesh_nodes[drawcall_max_instance_count * drawcall_index + i]
-                                                .joint_matrices[j]);
+                                            mesh_nodes[drawcall_max_instance_count * drawcall_index + i]
+                                                .joint_matrices[j];
                                     }
                                 }
                             }
@@ -2698,9 +2680,9 @@ namespace Piccolo
     {
         struct MeshNode
         {
-            const Matrix4x4* model_matrix {nullptr};
-            const Matrix4x4* joint_matrices {nullptr};
-            uint32_t         joint_count {0};
+            glm::mat4 model_matrix;
+            glm::mat4 joint_matrices[m_mesh_vertex_blending_max_joint_count];
+            bool      enable_vertex_blending;
         };
 
         std::map<VulkanPBRMaterial*, std::map<VulkanMesh*, std::vector<MeshNode>>> main_camera_mesh_drawcall_batch;
@@ -2712,11 +2694,14 @@ namespace Piccolo
             auto& mesh_nodes     = mesh_instanced[node.ref_mesh];
 
             MeshNode temp;
-            temp.model_matrix = node.model_matrix;
+            temp.model_matrix           = node.model_matrix;
+            temp.enable_vertex_blending = node.enable_vertex_blending;
             if (node.enable_vertex_blending)
             {
-                temp.joint_matrices = node.joint_matrices;
-                temp.joint_count = node.joint_count;
+                for (uint32_t i = 0; i < m_mesh_vertex_blending_max_joint_count; ++i)
+                {
+                    temp.joint_matrices[i] = node.joint_matrices[i];
+                }
             }
 
             mesh_nodes.push_back(temp);
@@ -2840,9 +2825,9 @@ namespace Piccolo
                         for (uint32_t i = 0; i < current_instance_count; ++i)
                         {
                             perdrawcall_storage_buffer_object.mesh_instances[i].model_matrix =
-                                GLMUtil::fromMat4x4(*mesh_nodes[drawcall_max_instance_count * drawcall_index + i].model_matrix);
+                                mesh_nodes[drawcall_max_instance_count * drawcall_index + i].model_matrix;
                             perdrawcall_storage_buffer_object.mesh_instances[i].enable_vertex_blending =
-                                mesh_nodes[drawcall_max_instance_count * drawcall_index + i].joint_matrices ?
+                                mesh_nodes[drawcall_max_instance_count * drawcall_index + i].enable_vertex_blending ?
                                     1.0 :
                                     -1.0;
                         }
@@ -2852,7 +2837,7 @@ namespace Piccolo
                         bool     least_one_enable_vertex_blending = true;
                         for (uint32_t i = 0; i < current_instance_count; ++i)
                         {
-                            if (!mesh_nodes[drawcall_max_instance_count * drawcall_index + i].joint_matrices)
+                            if (!mesh_nodes[drawcall_max_instance_count * drawcall_index + i].enable_vertex_blending)
                             {
                                 least_one_enable_vertex_blending = false;
                                 break;
@@ -2883,14 +2868,14 @@ namespace Piccolo
                                         per_drawcall_vertex_blending_dynamic_offset));
                             for (uint32_t i = 0; i < current_instance_count; ++i)
                             {
-                                if (mesh_nodes[drawcall_max_instance_count * drawcall_index + i].joint_matrices)
+                                if (mesh_nodes[drawcall_max_instance_count * drawcall_index + i].enable_vertex_blending)
                                 {
-                                    for (uint32_t j = 0; j < mesh_nodes[drawcall_max_instance_count * drawcall_index + i].joint_count; ++j)
+                                    for (uint32_t j = 0; j < m_mesh_vertex_blending_max_joint_count; ++j)
                                     {
                                         per_drawcall_vertex_blending_storage_buffer_object
                                             .joint_matrices[m_mesh_vertex_blending_max_joint_count * i + j] =
-                                            GLMUtil::fromMat4x4(mesh_nodes[drawcall_max_instance_count * drawcall_index + i]
-                                                .joint_matrices[j]);
+                                            mesh_nodes[drawcall_max_instance_count * drawcall_index + i]
+                                                .joint_matrices[j];
                                     }
                                 }
                             }
@@ -3158,4 +3143,4 @@ namespace Piccolo
             m_vulkan_rhi->m_vk_cmd_end_debug_utils_label_ext(m_vulkan_rhi->m_current_command_buffer);
         }
     }
-} // namespace Piccolo
+} // namespace Pilot

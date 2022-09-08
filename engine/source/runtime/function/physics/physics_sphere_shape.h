@@ -2,7 +2,7 @@
 
 #include "runtime/function/physics/physics_shape_base.h"
 
-namespace Piccolo
+namespace Pilot
 {
     class PhysicsSphereShape : public PhysicsShapeBase
     {
@@ -18,4 +18,4 @@ namespace Piccolo
     private:
         float m_radius {0.f};
     };
-} // namespace Piccolo
+} // namespace Pilot

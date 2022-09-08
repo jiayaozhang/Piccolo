@@ -2,14 +2,14 @@
 
 #include <filesystem>
 
-namespace Piccolo
+namespace Pilot
 {
     struct EngineInitParams;
 
     class ConfigManager
     {
     public:
-        void initialize(const std::filesystem::path& config_file_path);
+        void initialize(const EngineInitParams& init_param);
 
         const std::filesystem::path& getRootFolder() const;
         const std::filesystem::path& getAssetFolder() const;
@@ -40,4 +40,4 @@ namespace Piccolo
         std::string m_default_world_url;
         std::string m_global_rendering_res_url;
     };
-} // namespace Piccolo
+} // namespace Pilot

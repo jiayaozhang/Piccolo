@@ -10,7 +10,7 @@
 
 #include "_generated/serializer/all_serializer.h"
 
-namespace Piccolo
+namespace Pilot
 {
     WorldManager::~WorldManager() { clear(); }
 
@@ -151,4 +151,4 @@ namespace Piccolo
 
         active_level->save();
     }
-} // namespace Piccolo
+} // namespace Pilot

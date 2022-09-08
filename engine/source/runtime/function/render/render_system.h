@@ -9,7 +9,7 @@
 #include <memory>
 #include <optional>
 
-namespace Piccolo
+namespace Pilot
 {
     class WindowSystem;
     class RHI;
@@ -74,4 +74,4 @@ namespace Piccolo
 
         void processSwapData();
     };
-} // namespace Piccolo
+} // namespace Pilot

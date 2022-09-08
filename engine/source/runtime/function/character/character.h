@@ -6,7 +6,7 @@
 
 #include <vector>
 
-namespace Piccolo
+namespace Pilot
 {
     class Character
     {
@@ -36,4 +36,4 @@ namespace Piccolo
         Quaternion m_rotation_buffer;
         bool       m_rotation_dirty;
     };
-} // namespace Piccolo
+} // namespace Pilot

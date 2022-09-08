@@ -17,7 +17,7 @@
 
 #include "runtime/function/render/rhi/vulkan/vulkan_rhi.h"
 
-namespace Piccolo
+namespace Pilot
 {
     RenderSystem::~RenderSystem() {}
 
@@ -70,7 +70,6 @@ namespace Piccolo
 
         // initialize render pipeline
         RenderPipelineInitInfo pipeline_init_info;
-        pipeline_init_info.enable_fxaa = global_rendering_res.m_enable_fxaa;
         pipeline_init_info.render_resource = m_render_resource;
 
         m_render_pipeline        = std::make_shared<RenderPipeline>();
@@ -370,4 +369,4 @@ namespace Piccolo
             m_swap_context.resetCameraSwapData();
         }
     }
-} // namespace Piccolo
+} // namespace Pilot

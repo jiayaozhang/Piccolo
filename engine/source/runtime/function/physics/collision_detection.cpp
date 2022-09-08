@@ -1,6 +1,6 @@
 #include "runtime/function/physics/collision_detection.h"
 
-namespace Piccolo
+namespace Pilot
 {
     CollisionDetection::CollisionDetection() {}
 
@@ -560,4 +560,4 @@ namespace Piccolo
 
         return true;
     }
-} // namespace Piccolo
+} // namespace Pilot

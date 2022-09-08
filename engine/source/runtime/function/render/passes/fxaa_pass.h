@@ -2,7 +2,7 @@
 
 #include "runtime/function/render/render_pass.h"
 
-namespace Piccolo
+namespace Pilot
 {
     class WindowUI;
 
@@ -25,4 +25,4 @@ namespace Piccolo
         void setupPipelines();
         void setupDescriptorSet();
     };
-} // namespace Piccolo
+} // namespace Pilot

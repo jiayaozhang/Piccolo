@@ -2,7 +2,7 @@
 
 #include "runtime/function/render/render_pass.h"
 
-namespace Piccolo
+namespace Pilot
 {
     struct CombineUIPassInitInfo : RenderPassInitInfo
     {
@@ -24,4 +24,4 @@ namespace Piccolo
         void setupPipelines();
         void setupDescriptorSet();
     };
-} // namespace Piccolo
+} // namespace Pilot

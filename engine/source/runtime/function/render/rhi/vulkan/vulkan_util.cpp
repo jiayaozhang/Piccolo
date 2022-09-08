@@ -7,7 +7,7 @@
 #include <cstring>
 #include <stdexcept>
 
-namespace Piccolo
+namespace Pilot
 {
     std::unordered_map<uint32_t, VkSampler> VulkanUtil::m_mipmap_sampler_map;
     VkSampler                               VulkanUtil::m_nearest_sampler = VK_NULL_HANDLE;
@@ -188,7 +188,7 @@ namespace Piccolo
                                        uint32_t           texture_image_width,
                                        uint32_t           texture_image_height,
                                        void*              texture_image_pixels,
-                                       PICCOLO_PIXEL_FORMAT texture_image_format,
+                                       PILOT_PIXEL_FORMAT texture_image_format,
                                        uint32_t           miplevels)
     {
         if (!texture_image_pixels)
@@ -200,31 +200,31 @@ namespace Piccolo
         VkFormat     vulkan_image_format;
         switch (texture_image_format)
         {
-            case PICCOLO_PIXEL_FORMAT::PICCOLO_PIXEL_FORMAT_R8G8B8_UNORM:
+            case PILOT_PIXEL_FORMAT::PILOT_PIXEL_FORMAT_R8G8B8_UNORM:
                 texture_byte_size   = texture_image_width * texture_image_height * 3;
                 vulkan_image_format = VK_FORMAT_R8G8B8_UNORM;
                 break;
-            case PICCOLO_PIXEL_FORMAT::PICCOLO_PIXEL_FORMAT_R8G8B8_SRGB:
+            case PILOT_PIXEL_FORMAT::PILOT_PIXEL_FORMAT_R8G8B8_SRGB:
                 texture_byte_size   = texture_image_width * texture_image_height * 3;
                 vulkan_image_format = VK_FORMAT_R8G8B8_SRGB;
                 break;
-            case PICCOLO_PIXEL_FORMAT::PICCOLO_PIXEL_FORMAT_R8G8B8A8_UNORM:
+            case PILOT_PIXEL_FORMAT::PILOT_PIXEL_FORMAT_R8G8B8A8_UNORM:
                 texture_byte_size   = texture_image_width * texture_image_height * 4;
                 vulkan_image_format = VK_FORMAT_R8G8B8A8_UNORM;
                 break;
-            case PICCOLO_PIXEL_FORMAT::PICCOLO_PIXEL_FORMAT_R8G8B8A8_SRGB:
+            case PILOT_PIXEL_FORMAT::PILOT_PIXEL_FORMAT_R8G8B8A8_SRGB:
                 texture_byte_size   = texture_image_width * texture_image_height * 4;
                 vulkan_image_format = VK_FORMAT_R8G8B8A8_SRGB;
                 break;
-            case PICCOLO_PIXEL_FORMAT::PICCOLO_PIXEL_FORMAT_R32G32_FLOAT:
+            case PILOT_PIXEL_FORMAT::PILOT_PIXEL_FORMAT_R32G32_FLOAT:
                 texture_byte_size   = texture_image_width * texture_image_height * 4 * 2;
                 vulkan_image_format = VK_FORMAT_R32G32_SFLOAT;
                 break;
-            case PICCOLO_PIXEL_FORMAT::PICCOLO_PIXEL_FORMAT_R32G32B32_FLOAT:
+            case PILOT_PIXEL_FORMAT::PILOT_PIXEL_FORMAT_R32G32B32_FLOAT:
                 texture_byte_size   = texture_image_width * texture_image_height * 4 * 3;
                 vulkan_image_format = VK_FORMAT_R32G32B32_SFLOAT;
                 break;
-            case PICCOLO_PIXEL_FORMAT::PICCOLO_PIXEL_FORMAT_R32G32B32A32_FLOAT:
+            case PILOT_PIXEL_FORMAT::PILOT_PIXEL_FORMAT_R32G32B32A32_FLOAT:
                 texture_byte_size   = texture_image_width * texture_image_height * 4 * 4;
                 vulkan_image_format = VK_FORMAT_R32G32B32A32_SFLOAT;
                 break;
@@ -323,7 +323,7 @@ namespace Piccolo
                                    uint32_t             texture_image_width,
                                    uint32_t             texture_image_height,
                                    std::array<void*, 6> texture_image_pixels,
-                                   PICCOLO_PIXEL_FORMAT   texture_image_format,
+                                   PILOT_PIXEL_FORMAT   texture_image_format,
                                    uint32_t             miplevels)
     {
         VkDeviceSize texture_layer_byte_size;
@@ -332,31 +332,31 @@ namespace Piccolo
 
         switch (texture_image_format)
         {
-            case PICCOLO_PIXEL_FORMAT::PICCOLO_PIXEL_FORMAT_R8G8B8_UNORM:
+            case PILOT_PIXEL_FORMAT::PILOT_PIXEL_FORMAT_R8G8B8_UNORM:
                 texture_layer_byte_size = texture_image_width * texture_image_height * 3;
                 vulkan_image_format     = VK_FORMAT_R8G8B8_UNORM;
                 break;
-            case PICCOLO_PIXEL_FORMAT::PICCOLO_PIXEL_FORMAT_R8G8B8_SRGB:
+            case PILOT_PIXEL_FORMAT::PILOT_PIXEL_FORMAT_R8G8B8_SRGB:
                 texture_layer_byte_size = texture_image_width * texture_image_height * 3;
                 vulkan_image_format     = VK_FORMAT_R8G8B8_SRGB;
                 break;
-            case PICCOLO_PIXEL_FORMAT::PICCOLO_PIXEL_FORMAT_R8G8B8A8_UNORM:
+            case PILOT_PIXEL_FORMAT::PILOT_PIXEL_FORMAT_R8G8B8A8_UNORM:
                 texture_layer_byte_size = texture_image_width * texture_image_height * 4;
                 vulkan_image_format     = VK_FORMAT_R8G8B8A8_UNORM;
                 break;
-            case PICCOLO_PIXEL_FORMAT::PICCOLO_PIXEL_FORMAT_R8G8B8A8_SRGB:
+            case PILOT_PIXEL_FORMAT::PILOT_PIXEL_FORMAT_R8G8B8A8_SRGB:
                 texture_layer_byte_size = texture_image_width * texture_image_height * 4;
                 vulkan_image_format     = VK_FORMAT_R8G8B8A8_SRGB;
                 break;
-            case PICCOLO_PIXEL_FORMAT::PICCOLO_PIXEL_FORMAT_R32G32_FLOAT:
+            case PILOT_PIXEL_FORMAT::PILOT_PIXEL_FORMAT_R32G32_FLOAT:
                 texture_layer_byte_size = texture_image_width * texture_image_height * 4 * 2;
                 vulkan_image_format     = VK_FORMAT_R32G32_SFLOAT;
                 break;
-            case PICCOLO_PIXEL_FORMAT::PICCOLO_PIXEL_FORMAT_R32G32B32_FLOAT:
+            case PILOT_PIXEL_FORMAT::PILOT_PIXEL_FORMAT_R32G32B32_FLOAT:
                 texture_layer_byte_size = texture_image_width * texture_image_height * 4 * 3;
                 vulkan_image_format     = VK_FORMAT_R32G32B32_SFLOAT;
                 break;
-            case PICCOLO_PIXEL_FORMAT::PICCOLO_PIXEL_FORMAT_R32G32B32A32_FLOAT:
+            case PILOT_PIXEL_FORMAT::PILOT_PIXEL_FORMAT_R32G32B32A32_FLOAT:
                 texture_layer_byte_size = texture_image_width * texture_image_height * 4 * 4;
                 vulkan_image_format     = VK_FORMAT_R32G32B32A32_SFLOAT;
                 break;
@@ -923,4 +923,4 @@ namespace Piccolo
         vkDestroySampler(device, m_linear_sampler, nullptr);
         m_linear_sampler = VK_NULL_HANDLE;
     }
-} // namespace Piccolo
+} // namespace Pilot

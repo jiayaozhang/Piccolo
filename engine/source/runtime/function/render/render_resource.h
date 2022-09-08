@@ -14,7 +14,7 @@
 #include <map>
 #include <vector>
 
-namespace Piccolo
+namespace Pilot
 {
     class RHI;
     class RenderPassBase;
@@ -43,15 +43,15 @@ namespace Piccolo
         void*                _brdfLUT_texture_image_pixels;
         uint32_t             _brdfLUT_texture_image_width;
         uint32_t             _brdfLUT_texture_image_height;
-        PICCOLO_PIXEL_FORMAT   _brdfLUT_texture_image_format;
+        PILOT_PIXEL_FORMAT   _brdfLUT_texture_image_format;
         std::array<void*, 6> _irradiance_texture_image_pixels;
         uint32_t             _irradiance_texture_image_width;
         uint32_t             _irradiance_texture_image_height;
-        PICCOLO_PIXEL_FORMAT   _irradiance_texture_image_format;
+        PILOT_PIXEL_FORMAT   _irradiance_texture_image_format;
         std::array<void*, 6> _specular_texture_image_pixels;
         uint32_t             _specular_texture_image_width;
         uint32_t             _specular_texture_image_height;
-        PICCOLO_PIXEL_FORMAT   _specular_texture_image_format;
+        PILOT_PIXEL_FORMAT   _specular_texture_image_format;
     };
 
     struct ColorGradingResource
@@ -66,7 +66,7 @@ namespace Piccolo
         void*              _color_grading_LUT_texture_image_pixels;
         uint32_t           _color_grading_LUT_texture_image_width;
         uint32_t           _color_grading_LUT_texture_image_height;
-        PICCOLO_PIXEL_FORMAT _color_grading_LUT_texture_image_format;
+        PILOT_PIXEL_FORMAT _color_grading_LUT_texture_image_format;
     };
 
     struct StorageBuffer
@@ -183,4 +183,4 @@ namespace Piccolo
                                VulkanMesh&          now_mesh);
         void updateTextureImageData(std::shared_ptr<RHI> rhi, const TextureDataToUpdate& texture_data);
     };
-} // namespace Piccolo
+} // namespace Pilot

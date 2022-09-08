@@ -10,7 +10,7 @@
 #include <unordered_map>
 #include <vector>
 
-namespace Piccolo
+namespace Pilot
 {
     class VulkanUtil
     {
@@ -58,7 +58,7 @@ namespace Piccolo
                                                 uint32_t           texture_image_width,
                                                 uint32_t           texture_image_height,
                                                 void*              texture_image_pixels,
-                                                PICCOLO_PIXEL_FORMAT texture_image_format,
+                                                PILOT_PIXEL_FORMAT texture_image_format,
                                                 uint32_t           miplevels = 0);
         static void           createCubeMap(RHI*                 rhi,
                                             VkImage&             image,
@@ -67,7 +67,7 @@ namespace Piccolo
                                             uint32_t             texture_image_width,
                                             uint32_t             texture_image_height,
                                             std::array<void*, 6> texture_image_pixels,
-                                            PICCOLO_PIXEL_FORMAT   texture_image_format,
+                                            PILOT_PIXEL_FORMAT   texture_image_format,
                                             uint32_t             miplevels);
         static void           generateTextureMipMaps(RHI*     rhi,
                                                      VkImage  image,
@@ -104,4 +104,4 @@ namespace Piccolo
         static VkSampler                               m_nearest_sampler;
         static VkSampler                               m_linear_sampler;
     };
-} // namespace Piccolo
+} // namespace Pilot

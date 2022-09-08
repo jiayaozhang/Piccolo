@@ -2,7 +2,7 @@
 
 #include "runtime/core/math/transform.h"
 
-namespace Piccolo
+namespace Pilot
 {
     enum class ShapeType
     {
@@ -28,4 +28,4 @@ namespace Piccolo
         ShapeType  m_type {ShapeType::invalid};
         Transform m_local_transform ;
     };
-} // namespace Piccolo
+} // namespace Pilot

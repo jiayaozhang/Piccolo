@@ -11,7 +11,7 @@
 
 #include <cassert>
 
-namespace Piccolo
+namespace Pilot
 {
     void UIPass::initialize(const RenderPassInitInfo* init_info)
     {
@@ -113,4 +113,4 @@ namespace Piccolo
             }
         }
     }
-} // namespace Piccolo
+} // namespace Pilot

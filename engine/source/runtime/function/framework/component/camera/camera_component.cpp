@@ -15,7 +15,7 @@
 #include "runtime/function/render/render_swap_context.h"
 #include "runtime/function/render/render_system.h"
 
-namespace Piccolo
+namespace Pilot
 {
     void CameraComponent::postLoadResource(std::weak_ptr<GObject> parent_object)
     {
@@ -143,4 +143,4 @@ namespace Piccolo
         camera_swap_data.m_view_matrix                     = desired_mat;
         swap_context.getLogicSwapData().m_camera_swap_data = camera_swap_data;
     }
-} // namespace Piccolo
+} // namespace Pilot

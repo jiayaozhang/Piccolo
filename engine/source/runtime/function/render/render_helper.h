@@ -12,7 +12,7 @@
 
 #include <glm/glm.hpp>
 
-namespace Piccolo
+namespace Pilot
 {
     class RenderScene;
     class RenderCamera;
@@ -91,4 +91,4 @@ namespace Piccolo
     bool BoxIntersectsWithSphere(BoundingBox const& b, BoundingSphere const& s);
 
     glm::mat4 CalculateDirectionalLightCamera(RenderScene& scene, RenderCamera& camera);
-} // namespace Piccolo
+} // namespace Pilot

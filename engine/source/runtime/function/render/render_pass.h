@@ -9,7 +9,7 @@
 #include <memory>
 #include <vector>
 
-namespace Piccolo
+namespace Pilot
 {
     class VulkanRHI;
 
@@ -104,4 +104,4 @@ namespace Piccolo
 
     private:
     };
-} // namespace Piccolo
+} // namespace Pilot

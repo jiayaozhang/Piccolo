@@ -2,7 +2,7 @@
 
 #include "runtime/core/math/math.h"
 
-namespace Piccolo
+namespace Pilot
 {
     enum class GameCommand : unsigned int
     {
@@ -19,7 +19,7 @@ namespace Piccolo
 
     extern unsigned int k_complement_control_command;
 
-    class InputSystem
+    class InputSystem 
     {
 
     public:
@@ -36,7 +36,7 @@ namespace Piccolo
         Radian m_cursor_delta_yaw {0};
         Radian m_cursor_delta_pitch {0};
 
-        void         resetGameCommand() { m_game_command = 0; }
+        void resetGameCommand() { m_game_command = 0; }
         unsigned int getGameCommand() const { return m_game_command; }
 
     private:
@@ -49,4 +49,4 @@ namespace Piccolo
         int m_last_cursor_x {0};
         int m_last_cursor_y {0};
     };
-} // namespace Piccolo
+} // namespace Pilot

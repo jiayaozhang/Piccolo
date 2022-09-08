@@ -1,9 +1,8 @@
 #pragma once
 
 #include <memory>
-#include <string>
 
-namespace Piccolo
+namespace Pilot
 {
     class LogSystem;
     class InputSystem;
@@ -23,7 +22,7 @@ namespace Piccolo
     {
     public:
         // create all global systems and initialize these systems
-        void startSystems(const std::string& config_file_path);
+        void startSystems(const EngineInitParams& init_params);
         // destroy all global systems
         void shutdownSystems();
 
@@ -41,4 +40,4 @@ namespace Piccolo
     };
 
     extern RuntimeGlobalContext g_runtime_global_context;
-} // namespace Piccolo
+} // namespace Pilot

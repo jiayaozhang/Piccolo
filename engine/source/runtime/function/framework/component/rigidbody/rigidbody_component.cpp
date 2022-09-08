@@ -9,7 +9,7 @@
 #include "runtime/function/physics/physics_scene.h"
 #include "runtime/function/physics/physics_system.h"
 
-namespace Piccolo
+namespace Pilot
 {
     void RigidBodyComponent::postLoadResource(std::weak_ptr<GObject> parent_object)
     {
@@ -54,9 +54,6 @@ namespace Piccolo
     {
         m_physics_actor->setGlobalTransform(transform);
 
-        // these code intended to fix transform of rigid bodies, but 
-        // in JoltPhysics it removes local transform of shapes...
-        // so currently rigid bodies cannot be transformed
         //std::shared_ptr<PhysicsScene> physics_scene =
         //    g_runtime_global_context.m_world_manager->getCurrentActivePhysicsScene().lock();
         //ASSERT(physics_scene);
@@ -64,4 +61,4 @@ namespace Piccolo
         //physics_scene->updateRigidBodyGlobalTransform(m_physics_actor->getBodyID(), transform);
     }
 
-} // namespace Piccolo
+} // namespace Pilot

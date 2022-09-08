@@ -5,7 +5,7 @@
 
 #include <memory>
 
-namespace Piccolo
+namespace Pilot
 {
     class WindowSystem;
 
@@ -38,4 +38,4 @@ namespace Piccolo
     };
 
     inline RHI::~RHI() = default;
-} // namespace Piccolo
+} // namespace Pilot

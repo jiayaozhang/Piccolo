@@ -3,7 +3,7 @@
 #include "runtime/function/render/render_camera.h"
 #include "runtime/function/render/render_scene.h"
 
-namespace Piccolo
+namespace Pilot
 {
     ClusterFrustum CreateClusterFrustumFromMatrix(glm::mat4 mat,
                                                   float     x_left,
@@ -350,4 +350,4 @@ namespace Piccolo
         glm::mat4 light_proj_view = (light_proj * light_view);
         return light_proj_view;
     }
-} // namespace Piccolo
+} // namespace Pilot

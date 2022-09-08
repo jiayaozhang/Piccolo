@@ -8,7 +8,7 @@
 
 #include <stdexcept>
 
-namespace Piccolo
+namespace Pilot
 {
     void ColorGradingPass::initialize(const RenderPassInitInfo* init_info)
     {
@@ -287,4 +287,4 @@ namespace Piccolo
             m_vulkan_rhi->m_vk_cmd_end_debug_utils_label_ext(m_vulkan_rhi->m_current_command_buffer);
         }
     }
-} // namespace Piccolo
+} // namespace Pilot

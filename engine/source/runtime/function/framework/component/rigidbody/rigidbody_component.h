@@ -5,7 +5,7 @@
 #include "runtime/function/framework/component/component.h"
 #include "runtime/function/physics/physics_actor.h"
 
-namespace Piccolo
+namespace Pilot
 {
     REFLECTION_TYPE(RigidBodyComponent)
     CLASS(RigidBodyComponent : public Component, WhiteListFields)
@@ -26,4 +26,4 @@ namespace Piccolo
 
         PhysicsActor* m_physics_actor {nullptr};
     };
-} // namespace Piccolo
+} // namespace Pilot

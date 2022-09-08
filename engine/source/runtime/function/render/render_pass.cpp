@@ -5,9 +5,9 @@
 #include "runtime/function/render/render_resource.h"
 #include "runtime/function/render/rhi/vulkan/vulkan_rhi.h"
 
-Piccolo::VisiableNodes Piccolo::RenderPass::m_visiable_nodes;
+Pilot::VisiableNodes Pilot::RenderPass::m_visiable_nodes;
 
-namespace Piccolo
+namespace Pilot
 {
     void RenderPass::initialize(const RenderPassInitInfo* init_info)
     {
@@ -40,4 +40,4 @@ namespace Piccolo
         }
         return layouts;
     }
-} // namespace Piccolo
+} // namespace Pilot

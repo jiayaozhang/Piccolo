@@ -1,29 +1,27 @@
 #pragma once
 
-#include "runtime/core/base/hash.h"
-
 #include <cstdint>
 #include <memory>
 #include <string>
 
-namespace Piccolo
+namespace Pilot
 {
-    enum class PICCOLO_PIXEL_FORMAT : uint8_t
+    enum class PILOT_PIXEL_FORMAT : uint8_t
     {
-        PICCOLO_PIXEL_FORMAT_UNKNOWN = 0,
-        PICCOLO_PIXEL_FORMAT_R8G8B8_UNORM,
-        PICCOLO_PIXEL_FORMAT_R8G8B8_SRGB,
-        PICCOLO_PIXEL_FORMAT_R8G8B8A8_UNORM,
-        PICCOLO_PIXEL_FORMAT_R8G8B8A8_SRGB,
-        PICCOLO_PIXEL_FORMAT_R32G32_FLOAT,
-        PICCOLO_PIXEL_FORMAT_R32G32B32_FLOAT,
-        PICCOLO_PIXEL_FORMAT_R32G32B32A32_FLOAT
+        PILOT_PIXEL_FORMAT_UNKNOWN = 0,
+        PILOT_PIXEL_FORMAT_R8G8B8_UNORM,
+        PILOT_PIXEL_FORMAT_R8G8B8_SRGB,
+        PILOT_PIXEL_FORMAT_R8G8B8A8_UNORM,
+        PILOT_PIXEL_FORMAT_R8G8B8A8_SRGB,
+        PILOT_PIXEL_FORMAT_R32G32_FLOAT,
+        PILOT_PIXEL_FORMAT_R32G32B32_FLOAT,
+        PILOT_PIXEL_FORMAT_R32G32B32A32_FLOAT
     };
 
-    enum class PICCOLO_IMAGE_TYPE : uint8_t
+    enum class PILOT_IMAGE_TYPE : uint8_t
     {
-        PICCOLO_IMAGE_TYPE_UNKNOWM = 0,
-        PICCOLO_IMAGE_TYPE_2D
+        PILOT_IMAGE_TYPE_UNKNOWM = 0,
+        PILOT_IMAGE_TYPE_2D
     };
 
     enum class RENDER_PIPELINE_TYPE : uint8_t
@@ -65,8 +63,8 @@ namespace Piccolo
         uint32_t m_array_layers {0};
         void*    m_pixels {nullptr};
 
-        PICCOLO_PIXEL_FORMAT m_format {PICCOLO_PIXEL_FORMAT::PICCOLO_PIXEL_FORMAT_UNKNOWN};
-        PICCOLO_IMAGE_TYPE   m_type {PICCOLO_IMAGE_TYPE::PICCOLO_IMAGE_TYPE_UNKNOWM};
+        PILOT_PIXEL_FORMAT m_format {PILOT_PIXEL_FORMAT::PILOT_PIXEL_FORMAT_UNKNOWN};
+        PILOT_IMAGE_TYPE   m_type {PILOT_IMAGE_TYPE::PILOT_IMAGE_TYPE_UNKNOWM};
 
         TextureData() = default;
         ~TextureData()
@@ -119,22 +117,17 @@ namespace Piccolo
         bool operator==(const MaterialSourceDesc& rhs) const
         {
             return m_base_color_file == rhs.m_base_color_file &&
-                   m_metallic_roughness_file == rhs.m_metallic_roughness_file &&
-                   m_normal_file == rhs.m_normal_file &&
-                   m_occlusion_file == rhs.m_occlusion_file &&
-                   m_emissive_file == rhs.m_emissive_file;
+                   m_metallic_roughness_file == rhs.m_metallic_roughness_file && m_normal_file == rhs.m_normal_file &&
+                   m_occlusion_file == rhs.m_occlusion_file && m_emissive_file == rhs.m_emissive_file;
         }
-
         size_t getHashValue() const
         {
-            size_t hash = 0;
-            hash_combine(hash,
-                         m_base_color_file,
-                         m_metallic_roughness_file,
-                         m_normal_file,
-                         m_occlusion_file,
-                         m_emissive_file);
-            return hash;
+            size_t h0 = std::hash<std::string> {}(m_base_color_file);
+            size_t h1 = std::hash<std::string> {}(m_metallic_roughness_file);
+            size_t h2 = std::hash<std::string> {}(m_normal_file);
+            size_t h3 = std::hash<std::string> {}(m_occlusion_file);
+            size_t h4 = std::hash<std::string> {}(m_emissive_file);
+            return (((h0 ^ (h1 << 1)) ^ (h2 << 1)) ^ (h3 << 1)) ^ (h4 << 1);
         }
     };
 
@@ -158,15 +151,15 @@ namespace Piccolo
         std::shared_ptr<TextureData> m_occlusion_texture;
         std::shared_ptr<TextureData> m_emissive_texture;
     };
-} // namespace Piccolo
+} // namespace Pilot
 
 template<>
-struct std::hash<Piccolo::MeshSourceDesc>
+struct std::hash<Pilot::MeshSourceDesc>
 {
-    size_t operator()(const Piccolo::MeshSourceDesc& rhs) const noexcept { return rhs.getHashValue(); }
+    size_t operator()(const Pilot::MeshSourceDesc& rhs) const noexcept { return rhs.getHashValue(); }
 };
 template<>
-struct std::hash<Piccolo::MaterialSourceDesc>
+struct std::hash<Pilot::MaterialSourceDesc>
 {
-    size_t operator()(const Piccolo::MaterialSourceDesc& rhs) const noexcept { return rhs.getHashValue(); }
+    size_t operator()(const Pilot::MaterialSourceDesc& rhs) const noexcept { return rhs.getHashValue(); }
 };

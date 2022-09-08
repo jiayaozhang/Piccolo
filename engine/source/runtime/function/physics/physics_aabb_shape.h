@@ -4,7 +4,7 @@
 
 #include "runtime/function/physics/physics_shape_base.h"
 
-namespace Piccolo
+namespace Pilot
 {
     class PhysicsAABBShape : public PhysicsShapeBase
     {
@@ -20,4 +20,4 @@ namespace Piccolo
     private:
         Vector3 m_half_dimensions;
     };
-} // namespace Piccolo
+} // namespace Pilot

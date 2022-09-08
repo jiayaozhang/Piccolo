@@ -9,7 +9,7 @@
 #include <optional>
 #include <vector>
 
-namespace Piccolo
+namespace Pilot
 {
     struct QueueFamilyIndices
     {
@@ -169,13 +169,8 @@ namespace Piccolo
         const std::vector<char const*> m_validation_layers {"VK_LAYER_KHRONOS_validation"};
         uint32_t                       m_vulkan_api_version {VK_API_VERSION_1_0};
 
-        std::vector<char const*> m_device_extensions = {
-            VK_KHR_SWAPCHAIN_EXTENSION_NAME,
-#if defined(__MACH__)
-            "VK_KHR_portability_subset"
-#endif
-        };
+        std::vector<char const*> m_device_extensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 
         VkDebugUtilsMessengerEXT m_debug_messenger {VK_NULL_HANDLE};
     };
-} // namespace Piccolo
+} // namespace Pilot

@@ -3,7 +3,7 @@
 #include "runtime/core/math/vector2.h"
 #include "runtime/function/render/render_pass.h"
 
-namespace Piccolo
+namespace Pilot
 {
     class RenderResourceBase;
 
@@ -40,4 +40,4 @@ namespace Piccolo
 
         VkDescriptorSetLayout _per_mesh_layout {VK_NULL_HANDLE};
     };
-} // namespace Piccolo
+} // namespace Pilot

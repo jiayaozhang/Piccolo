@@ -13,7 +13,7 @@
 
 #include <limits>
 
-namespace Piccolo
+namespace Pilot
 {
     Level::~Level() { clear(); }
 
@@ -192,4 +192,4 @@ namespace Piccolo
         m_gobjects.erase(go_id);
     }
 
-} // namespace Piccolo
+} // namespace Pilot
