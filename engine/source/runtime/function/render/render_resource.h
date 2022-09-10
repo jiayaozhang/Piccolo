@@ -159,6 +159,11 @@ namespace Piccolo
         VulkanPBRMaterial&
         getOrCreateVulkanMaterial(std::shared_ptr<RHI> rhi, RenderEntity entity, RenderMaterialData material_data);
 
+///////////////////////////////////////////////////////////////
+//在 render_system 中通过将数据封装到 render_entity 中传递给 pipeline
+        void updateStageBuffer(std::shared_ptr<RHI> rhi, RenderEntity entity, RenderMaterialData material_data, VulkanPBRMaterial* nowPBRMatarial);
+//////////////////////////////////////////////////////////////////
+
         void updateMeshData(std::shared_ptr<RHI>                          rhi,
                             bool                                          enable_vertex_blending,
                             uint32_t                                      index_buffer_size,

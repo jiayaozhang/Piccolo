@@ -177,6 +177,35 @@ namespace Piccolo
             vec_ptr->y = val[1];
             vec_ptr->z = val[2];
         };
+//////////////////////////////////////
+//在 editor_ui 的构造函数中添加 Color 属性的注册函数，与 Imgui:ColorEditor3UI 控件绑定
+
+        m_editor_ui_creator["Color"] = [this](const std::string& name, void* value_ptr) -> void {
+            Color* color_ptr = static_cast<Color*>(value_ptr);
+            float  val[3]    = {color_ptr->r, color_ptr->g, color_ptr->b};
+            if (g_node_depth == -1)
+            {
+                std::string label = "##" + name;
+                ImGui::Text("%s", name.c_str());
+                ImGui::SameLine();
+                ImGui::ColorEdit3(label.c_str(), val);
+            }
+            else
+            {
+                if (g_editor_node_state_array[g_node_depth].second)
+                {
+                    std::string full_label = "##" + getLeafUINodeParentLabel() + name;
+                    ImGui::Text("%s", (name + ":").c_str());
+                    ImGui::ColorEdit3(full_label.c_str(), val);
+                }
+            }
+            color_ptr->r = val[0];
+            color_ptr->g = val[1];
+            color_ptr->b = val[2];
+        };
+
+//g_editor_node_state_array[g_node_depth].second 这里表示只有当前属性可见是才创建对应的 UI
+///////////////////////////////////////
         m_editor_ui_creator["Quaternion"] = [this](const std::string& name, void* value_ptr) -> void {
             Quaternion* qua_ptr = static_cast<Quaternion*>(value_ptr);
             float       val[4]  = {qua_ptr->x, qua_ptr->y, qua_ptr->z, qua_ptr->w};

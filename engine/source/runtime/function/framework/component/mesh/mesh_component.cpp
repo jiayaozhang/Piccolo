@@ -87,6 +87,8 @@ namespace Piccolo
                 }
                 Matrix4x4 object_transform_matrix = mesh_part.m_transform_desc.m_transform_matrix;
 
+                mesh_part.m_material_desc.m_main_color = m_mesh_res.m_color;
+
                 mesh_part.m_transform_desc.m_transform_matrix =
                     transform_component->getMatrix() * object_transform_matrix;
                 dirty_mesh_parts.push_back(mesh_part);

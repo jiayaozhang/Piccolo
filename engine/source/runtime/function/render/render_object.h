@@ -2,6 +2,7 @@
 
 #include "runtime/core/math/matrix4.h"
 #include "runtime/function/framework/object/object_id_allocator.h"
+#include "runtime/core/color/color.h"
 
 #include <string>
 #include <vector>
@@ -45,6 +46,7 @@ namespace Piccolo
         std::string m_normal_texture_file;
         std::string m_occlusion_texture_file;
         std::string m_emissive_texture_file;
+        Color     m_main_color;
         bool        m_with_texture {false};
     };
 

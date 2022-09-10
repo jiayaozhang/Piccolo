@@ -341,6 +341,7 @@ namespace Piccolo
         auto it = m_vulkan_pbr_materials.find(assetid);
         if (it != m_vulkan_pbr_materials.end())
         {
+            updateStageBuffer(rhi, entity, material_data, &(it->second));
             return it->second;
         }
         else
@@ -444,7 +445,7 @@ namespace Piccolo
                     (*static_cast<MeshPerMaterialUniformBufferObject*>(staging_buffer_data));
                 material_uniform_buffer_info.is_blend          = entity.m_blend;
                 material_uniform_buffer_info.is_double_sided   = entity.m_double_sided;
-                material_uniform_buffer_info.baseColorFactor   = entity.m_base_color_factor;
+                material_uniform_buffer_info.baseColorFactor   = entity.m_base_color_factor; 
                 material_uniform_buffer_info.metallicFactor    = entity.m_metallic_factor;
                 material_uniform_buffer_info.roughnessFactor   = entity.m_roughness_factor;
                 material_uniform_buffer_info.normalScale       = entity.m_normal_scale;
@@ -603,6 +604,66 @@ namespace Piccolo
             return now_material;
         }
     }
+
+//////////////////////////////////////////////////////
+
+    void RenderResource::updateStageBuffer(std::shared_ptr<RHI> rhi,
+                                           RenderEntity         entity,
+                                           RenderMaterialData   material_data,
+                                           VulkanPBRMaterial*   nowPBRMatarial)
+    {
+        VulkanRHI* vulkan_context = static_cast<VulkanRHI*>(rhi.get());
+
+        VulkanPBRMaterial& now_material = *nowPBRMatarial;
+
+        // similiarly to the vertex/index buffer, we should allocate the uniform
+        // buffer in DEVICE_LOCAL memory and use the temp stage buffer to copy the
+        // data
+        {
+            // temporary staging buffer
+            VkDeviceSize buffer_size = sizeof(MeshPerMaterialUniformBufferObject);
+
+            VkBuffer       inefficient_staging_buffer        = VK_NULL_HANDLE;
+            VkDeviceMemory inefficient_staging_buffer_memory = VK_NULL_HANDLE;
+            VulkanUtil::createBuffer(vulkan_context->m_physical_device,
+                                     vulkan_context->m_device,
+                                     buffer_size,
+                                     VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+                                     VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+                                     inefficient_staging_buffer,
+                                     inefficient_staging_buffer_memory);
+            // VK_BUFFER_USAGE_TRANSFER_SRC_BIT: buffer can be used as source in a
+            // memory transfer operation
+
+            void* staging_buffer_data = nullptr;
+            vkMapMemory(
+                vulkan_context->m_device, inefficient_staging_buffer_memory, 0, buffer_size, 0, &staging_buffer_data);
+
+            MeshPerMaterialUniformBufferObject& material_uniform_buffer_info =
+                (*static_cast<MeshPerMaterialUniformBufferObject*>(staging_buffer_data));
+            material_uniform_buffer_info.is_blend          = entity.m_blend;
+            material_uniform_buffer_info.is_double_sided   = entity.m_double_sided;
+            material_uniform_buffer_info.baseColorFactor   = entity.m_base_color_factor;
+            material_uniform_buffer_info.metallicFactor    = entity.m_metallic_factor;
+            material_uniform_buffer_info.roughnessFactor   = entity.m_roughness_factor;
+            material_uniform_buffer_info.normalScale       = entity.m_normal_scale;
+            material_uniform_buffer_info.occlusionStrength = entity.m_occlusion_strength;
+            material_uniform_buffer_info.emissiveFactor    = entity.m_emissive_factor;
+
+            vkUnmapMemory(vulkan_context->m_device, inefficient_staging_buffer_memory);
+
+            // use the data from staging buffer
+            VulkanUtil::copyBuffer(
+                rhi.get(), inefficient_staging_buffer, now_material.material_uniform_buffer, 0, 0, buffer_size);
+
+            // release staging buffer
+            vkDestroyBuffer(vulkan_context->m_device, inefficient_staging_buffer, nullptr);
+            vkFreeMemory(vulkan_context->m_device, inefficient_staging_buffer_memory, nullptr);
+        }
+    }
+
+
+///////////////////////////////////////////////////////
 
     void RenderResource::updateMeshData(std::shared_ptr<RHI>                   rhi,
                                         bool                                   enable_vertex_blending,

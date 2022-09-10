@@ -300,13 +300,28 @@ namespace Piccolo
                     render_entity.m_material_asset_id =
                         m_render_scene->getMaterialAssetdAllocator().allocGuid(material_source);
 
+////////////////////////////////////
+//在 meshcomponent 的 tick 函数中赋值，当属性修改后脏数据会被添加到一个队列中等待处理
+
+                    auto color = Vector4(game_object_part.m_material_desc.m_main_color.r,
+                                                                game_object_part.m_material_desc.m_main_color.g,
+                                                                game_object_part.m_material_desc.m_main_color.b,
+                        1.0f);
+
+                    bool materialDirty = render_entity.m_base_color_factor != color;
+
+                    if (materialDirty)
+                        render_entity.m_base_color_factor = color;
+
+////////////////////////////////////
+
                     // create game object on the graphics api side
                     if (!is_mesh_loaded)
                     {
                         m_render_resource->uploadGameObjectRenderResource(m_rhi, render_entity, mesh_data);
                     }
 
-                    if (!is_material_loaded)
+                    // if (!is_material_loaded)
                     {
                         m_render_resource->uploadGameObjectRenderResource(m_rhi, render_entity, material_data);
                     }

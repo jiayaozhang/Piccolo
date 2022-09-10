@@ -28,6 +28,7 @@ layout(location = 0) in highp vec3 in_world_position;
 layout(location = 1) in highp vec3 in_normal;
 layout(location = 2) in highp vec3 in_tangent;
 layout(location = 3) in highp vec2 in_texcoord;
+layout(location = 4) in highp vec3 in_maincolor;
 
 // output screen color to location 0
 layout(location = 0) out highp vec4 out_gbuffer_a;
@@ -38,6 +39,7 @@ layout(location = 2) out highp vec4 out_gbuffer_c;
 highp vec3 getBasecolor()
 {
     highp vec3 basecolor = texture(base_color_texture_sampler, in_texcoord).xyz * baseColorFactor.xyz;
+    // baseColorFactor.xyz;
     return basecolor;
 }
 
